@@ -1,5 +1,10 @@
-/* src/app/groups/groups.component.css */
 .groups-container {
-    padding: 20px;
-  }
-  
+  padding: 20px;
+  background-color: #e0e0e0;
+}
+
+.groups-container h1 {
+  color: #444;
+  font-size: 24px;
+  margin-bottom: 20px;
+}

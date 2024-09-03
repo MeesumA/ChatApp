@@ -7,15 +7,12 @@ import { GroupsComponent } from './app/groups/groups.component';
 import { ChannelsComponent } from './app/channels/channels.component';
 import { importProvidersFrom } from '@angular/core';
 
-
-// import { AuthGuard } from './auth.guard';
-
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent, },
-  { path: 'groups', component: GroupsComponent, },
-  { path: 'channels', component: ChannelsComponent,  },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'groups', component: GroupsComponent },
+  { path: 'channels', component: ChannelsComponent },
 ];
 
 bootstrapApplication(AppComponent, {

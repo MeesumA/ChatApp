@@ -1,5 +1,11 @@
-/* src/app/dashboard/dashboard.component.css */
+/* src/app/dashboard.component.css */
 .dashboard-container {
-    padding: 20px;
-  }
-  
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.dashboard-container h1 {
+  color: #555;
+  font-size: 24px;
+  margin-bottom: 20px;
+}

@@ -1,2 +1,11 @@
-<app-navigation></app-navigation>
-<router-outlet></router-outlet>
+<!-- src/app/app.component.html -->
+<nav class="navbar">
+    <ul class="navbar-nav">
+      <li *ngIf="authService.isLoggedIn()"><a routerLink="/dashboard">Dashboard</a></li>
+      <li *ngIf="authService.isLoggedIn()"><a routerLink="/groups">Groups</a></li>
+      <li *ngIf="authService.isLoggedIn()"><a routerLink="/channels">Channels</a></li>
+      <li *ngIf="authService.isLoggedIn()"><button (click)="logout()">Logout</button></li>
+    </ul>
+  </nav>
+  <router-outlet></router-outlet>
+  
