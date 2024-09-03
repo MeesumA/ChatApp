@@ -5,6 +5,27 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { GroupsComponent } from './groups/groups.component';
 import { ChannelsComponent } from './channels/channels.component';
 import { AuthGuard } from './auth.guard'; // If using guards
+import { FormsModule } from '@angular/forms';
+import { AppComponent } from './app.component';
+import { ManageUsersComponent } from './manage-users/manage-users.component';
+import { MessagingComponent } from './messaging/messaging.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { AuthService } from './auth.service';
+
+NgModule({
+  declarations: [
+    AppComponent,
+    ManageUsersComponent,
+    MessagingComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule // Add FormsModule to imports
+  ],
+  providers: [AuthService],
+  bootstrap: [AppComponent]
+})
+
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -15,8 +36,12 @@ const routes: Routes = [
   { path: '**', redirectTo: '/login' } // Handle unknown routes
 ];
 
+
+
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
+
+export class AppModule { }

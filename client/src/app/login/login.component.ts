@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';  // Import CommonModule
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -9,6 +10,7 @@ import { CommonModule } from '@angular/common';  // Import CommonModule
   styleUrls: ['./login.component.css'],
   standalone: true,
   imports: [FormsModule, CommonModule],  // Include CommonModule in imports
+  providers: [AuthService]
 })
 export class LoginComponent {
   username: string = '';
