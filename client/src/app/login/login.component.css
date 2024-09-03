@@ -1,0 +1,55 @@
+.login-container {
+  max-width: 400px;
+  margin: 50px auto; 
+  padding: 30px; 
+  border: 1px solid #ddd;
+  border-radius: 10px; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+  background-color: #fff; /* Added a background color for contrast */
+}
+
+h2 {
+  text-align: center;
+  font-size: 24px; /* Increased font size for a more prominent heading */
+  color: #333; 
+  margin-bottom: 20px; 
+}
+
+.form-group {
+  margin-bottom: 20px; 
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px; 
+  font-weight: bold; /* Made label text bold for better visibility */
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px; 
+  border: 1px solid #ccc; /* Slightly lighter border color */
+  border-radius: 6px; 
+  font-size: 16px; 
+  box-sizing: border-box; /* Ensures padding and border are included in element’s total width and height */
+}
+
+button {
+  width: 100%;
+  padding: 12px; /* Increased padding for a more prominent button */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px; /* Increased border-radius for a smoother button */
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+button:hover {
+  background-color: #0056b3; /* Darker blue for hover effect */
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed; 
+}
