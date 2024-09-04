@@ -9,7 +9,6 @@ import { AuthService } from '../auth.service';
 })
 export class DashboardComponent implements OnInit {
   userGroups: any[] = [];
-  userChannels: any[] = [];
   currentUser: any = null;
 
   constructor(
@@ -20,8 +19,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     if (this.currentUser) {
-      this.userGroups = this.groupChannelService.getUserGroups(this.currentUser.username);
-      this.userChannels = this.groupChannelService.getUserChannels(this.currentUser.username);
+      this.userGroups = this.currentUser.groups; 
     }
   }
 }

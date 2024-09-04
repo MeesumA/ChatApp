@@ -1,0 +1,11 @@
+<div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+<div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+<h3>Create New User</h3>
+<input type="text" placeholder="Username" [(ngModel)]="username" />
+<input type="password" placeholder="Password" [(ngModel)]="password" />
+<button (click)="createUser()">Create User</button>
+
+<h3>Delete User</h3>
+<input type="text" placeholder="Username to delete" [(ngModel)]="username" />
+<button (click)="deleteUser()">Delete User</button>

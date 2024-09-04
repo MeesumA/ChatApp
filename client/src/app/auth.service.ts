@@ -1,19 +1,17 @@
-// client/src/app/auth.service.ts
-
 import { Injectable } from '@angular/core';
 import { User } from './models/user.model';
-import { v4 as uuidv4 } from 'uuid'; // Use UUID for generating unique string IDs
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private usersKey = 'users'; // Local storage key for users
+  private usersKey = 'users'; 
   private currentUserKey = 'currentUser'; // Local storage key for current logged-in user
 
   constructor() {
     if (this.isBrowser()) {
-      this.ensureSuperUser(); // Ensure that there's a Super Admin in the system
+      this.ensureSuperUser(); 
     }
   }
 
@@ -35,7 +33,7 @@ export class AuthService {
     return false;
   }
 
-  // Register a new user (ensure username is unique)
+  // Register a new user - This allows both Super Admins and non-admin users to register
   register(username: string, password: string, role: string = 'User'): boolean {
     if (!this.isBrowser()) return false;
 
@@ -48,7 +46,7 @@ export class AuthService {
     }
 
     const newUser: User = {
-      id: this.generateUserId(),
+      id: uuidv4(), // Generate unique id for the user
       username: username,
       email: `${username}@chatapp.com`, // Simple email generation for demo purposes
       password: password,
@@ -83,7 +81,7 @@ export class AuthService {
     const users = this.getUsers();
     if (!users.find((user) => user.roles.includes('Super Admin'))) {
       users.push({
-        id: this.generateUserId(),
+        id: uuidv4(),
         username: 'super',
         email: 'super@admin.com',
         password: '123',
@@ -94,17 +92,25 @@ export class AuthService {
     }
   }
 
-  // Generate a unique user ID for new users (using UUID)
-  private generateUserId(): string {
-    return uuidv4(); // Generates a unique string ID
-  }
-
   // Get the currently logged-in user from local storage
   getCurrentUser(): User | null {
     if (!this.isBrowser()) return null;
 
     const currentUserJson = localStorage.getItem(this.currentUserKey);
     return currentUserJson ? JSON.parse(currentUserJson) : null;
+  }
+
+  // Update the currently logged-in user
+  updateCurrentUser(user: User): void {
+    if (!this.isBrowser()) return;
+
+    const users: User[] = this.getUsers();
+    const index = users.findIndex((u) => u.username === user.username);
+    if (index !== -1) {
+      users[index] = user; 
+      this.setUsers(users); 
+      localStorage.setItem(this.currentUserKey, JSON.stringify(user)); 
+    }
   }
 
   // Log out the current user by removing them from local storage

@@ -1,8 +1,13 @@
-<nav class="navbar">
-  <ul>
-    <li *ngIf="isLoggedIn"><a routerLink="/dashboard">Dashboard</a></li>
-    <li *ngIf="isLoggedIn && (role === 'Super Admin' || role === 'Group Admin')"><a routerLink="/groups">Groups</a></li>
-    <li *ngIf="isLoggedIn && role === 'Super Admin'"><a routerLink="/channels">Channels</a></li>
-    <li *ngIf="isLoggedIn"><button (click)="logout()">Logout</button></li>
-  </ul>
+<nav>
+  <a routerLink="/dashboard">Dashboard</a>
+  <a routerLink="/groups">Groups</a>
+  <a routerLink="/channels">Channels</a>
+
+  
+  <a *ngIf="isSuperAdmin" routerLink="/super-admin">Super Admin</a>
+
+ 
+  <a *ngIf="isGroupAdmin" routerLink="/group-admin">Group Admin</a>
+
+  <button (click)="logout()">Logout</button>
 </nav>

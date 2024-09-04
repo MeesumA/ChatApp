@@ -1,16 +1,39 @@
-// client/src/app/group-channel.service.ts
-
 import { Injectable } from '@angular/core';
-import { Group } from './models/group.model'; // Assuming you have a Group model
-import { User } from './models/user.model'; // Assuming you have a User model
+import { AuthService } from './auth.service';
+import { Group } from './models/group.model'; 
+import { User } from './models/user.model'; 
 
 @Injectable({
-  providedIn: 'root',
-})
-export class GroupChannelService {
-  private groupsKey = 'groups'; // Key for local storage
-
-  constructor() {}
+    providedIn: 'root',
+  })
+  export class GroupChannelService {
+    private groupsKey = 'groups';
+  
+    constructor(private authService: AuthService) {}
+    joinChannel(groupName: string, channelName: string): void {
+        const currentUser = this.authService.getCurrentUser();
+        if (currentUser) {
+          const groups = this.getGroups();
+          const group = groups.find((g) => g.name === groupName);
+          if (group) {
+            const channel = group.channels.find((c) => c === channelName);
+            if (channel && !currentUser.groups.includes(groupName)) {
+              currentUser.groups.push(groupName);
+              this.authService.updateCurrentUser(currentUser);
+              console.log(`User joined the channel: ${channelName} in group: ${groupName}`);
+            }
+          }
+        }
+      }
+      
+      leaveGroup(groupName: string): void {
+        const currentUser = this.authService.getCurrentUser();
+        if (currentUser) {
+          currentUser.groups = currentUser.groups.filter((group) => group !== groupName);
+          this.authService.updateCurrentUser(currentUser);
+          console.log(`User left the group: ${groupName}`);
+        }
+      }
 
   // Create a new group
   createGroup(groupName: string, adminUsername: string): void {
@@ -62,6 +85,15 @@ export class GroupChannelService {
     }
   }
 
+  deleteAccount(): void {
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      this.authService.removeUser(currentUser.username);
+      this.authService.logout();
+      console.log('User account deleted');
+    }
+  }
+
   // Get all groups from local storage
   getGroups(): Group[] {
     const groupsJson = localStorage.getItem(this.groupsKey);
@@ -73,16 +105,45 @@ export class GroupChannelService {
     localStorage.setItem(this.groupsKey, JSON.stringify(groups));
   }
 
-  // Get groups for a specific user (i.e., the groups they are part of)
+  // Get groups for a specific user 
   getUserGroups(username: string): Group[] {
     const groups = this.getGroups();
     return groups.filter((group) => group.users.includes(username));
   }
 
-  // Get channels for a specific user (based on the groups they belong to)
+  // Get channels for a specific user 
   getUserChannels(username: string): string[] {
     const groups = this.getUserGroups(username);
     const userChannels = groups.flatMap((group) => group.channels);
     return Array.from(new Set(userChannels)); // Remove duplicates
   }
-}
+
+      // Super Admin functions
+      promoteToGroupAdmin(username: string): void {
+        const currentUser = this.authService.getCurrentUser();
+        if (currentUser?.roles.includes('Super Admin')) {
+          this.authService.promoteToGroupAdmin(username);
+        } else {
+          console.error('Permission denied: Only Super Admin can promote to Group Admin');
+        }
+      }
+    
+      promoteToSuperAdmin(username: string): void {
+        const currentUser = this.authService.getCurrentUser();
+        if (currentUser?.roles.includes('Super Admin')) {
+          this.authService.promoteToSuperAdmin(username);
+        } else {
+          console.error('Permission denied: Only Super Admin can promote to Super Admin');
+        }
+      }
+    
+      removeUser(username: string): void {
+        const currentUser = this.authService.getCurrentUser();
+        if (currentUser?.roles.includes('Super Admin')) {
+          this.authService.removeUser(username);
+        } else {
+          console.error('Permission denied: Only Super Admin can remove users');
+        }
+      }
+    }
+

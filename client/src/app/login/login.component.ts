@@ -1,5 +1,3 @@
-// client/src/app/login/login.component.ts
-
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -16,17 +14,16 @@ import { AuthService } from '../auth.service';
 export class LoginComponent {
   username: string = '';
   password: string = '';
-  role: string = 'User'; // Default role for new registrations
+  role: string = 'User'; 
   errorMessage: string = '';
-  isRegistering: boolean = false; // Toggle between login and registration
+  isRegistering: boolean = false; 
 
   constructor(private router: Router, private authService: AuthService) {}
 
-  // Toggle between login and register forms
-  toggleRegistering(event: Event) {
-    event.preventDefault(); // Prevent default link behavior (like reload)
+    toggleRegistering(event: Event) {
+    event.preventDefault(); 
     this.isRegistering = !this.isRegistering;
-    this.errorMessage = ''; // Clear any error messages when switching forms
+    this.errorMessage = ''; 
   }
 
   // Login function

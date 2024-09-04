@@ -1,14 +1,13 @@
-/* Navigation bar container */
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px; /* Add padding for spacing */
-    background-color: #f8f9fa; /* Light background color */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 10px 20px; 
+    background-color: #f8f9fa; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
 }
 
-/* Navigation links container */
+
 nav ul {
     display: flex;
     flex-direction: row;
@@ -16,44 +15,43 @@ nav ul {
     padding: 0;
 }
 
-/* Individual list items */
+
 nav ul li {
     list-style-type: none;
-    margin-right: 20px; /* Increased spacing between links */
+    margin-right: 20px;
 }
 
-/* Navigation links */
+
 nav ul li a {
     text-decoration: none;
-    color: #343a40; /* Darker text color */
-    font-weight: bold; /* Make links bold */
-    font-size: 16px; /* Increase font size */
+    color: #343a40; 
+    font-weight: bold; 
+    font-size: 16px;
 }
 
-/* Hover effect for links */
+
 nav ul li a:hover {
-    color: #007bff; /* Bootstrap primary color */
-    text-decoration: underline; /* Add underline on hover */
+    color: #007bff; 
+    text-decoration: underline; 
 }
 
-/* Logout button container */
+
 nav .logout-container {
-    margin-left: auto; /* Push logout button to the right */
+    margin-left: auto; 
 }
 
-/* Logout button */
+
 nav button {
-    padding: 8px 15px; /* Increase padding for better appearance */
-    background-color: #007bff; /* Bootstrap primary color */
+    padding: 8px 15px; 
+    background-color: #007bff; 
     border: none;
     color: white;
     cursor: pointer;
-    border-radius: 5px; /* Rounded corners */
-    font-size: 14px; /* Adjust font size */
-    transition: background-color 0.3s ease; /* Smooth transition on hover */
+    border-radius: 5px; 
+    font-size: 14px; 
+    transition: background-color 0.3s ease; 
 }
 
-/* Hover effect for logout button */
 nav button:hover {
-    background-color: #0056b3; /* Darker shade on hover */
+    background-color: #0056b3; 
 }

@@ -1,5 +1,3 @@
-// client/src/app/groups/groups.component.ts
-
 import { FormsModule } from '@angular/forms';  
 import { CommonModule } from '@angular/common';  
 import { Component } from '@angular/core';
@@ -20,6 +18,7 @@ export class GroupsComponent {
   username: string = '';
   availableGroups: any[] = [];
   isAdmin: boolean = false;
+  isSuperAdmin: boolean = false;
 
   constructor(
     private groupChannelService: GroupChannelService,
@@ -28,35 +27,34 @@ export class GroupsComponent {
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
       this.isAdmin = currentUser.roles.includes('Group Admin') || currentUser.roles.includes('Super Admin');
+      this.isSuperAdmin = currentUser.roles.includes('Super Admin');
       this.availableGroups = this.groupChannelService.getGroups();
     }
   }
+  
 
   createGroup() {
     if (!this.isAdmin) {
-      console.error('Permission denied: Only Group Admins and Super Admins can create groups.');
+      console.error('Permission denied: Only Group Admins can create groups.');
       return;
     }
-
     if (!this.groupName.trim()) {
       console.error('Group name cannot be empty.');
       return;
     }
-
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
       this.groupChannelService.createGroup(this.groupName, currentUser.username);
       this.availableGroups = this.groupChannelService.getGroups();
-      this.groupName = ''; // Reset input field
+      this.groupName = '';
     }
   }
 
   addChannel() {
     if (!this.isAdmin) {
-      console.error('Permission denied: Only Group Admins and Super Admins can add channels.');
+      console.error('Permission denied: Only Group Admins can add channels.');
       return;
     }
-
     if (!this.selectedGroup) {
       console.error('Please select a group.');
       return;
@@ -65,17 +63,15 @@ export class GroupsComponent {
       console.error('Channel name cannot be empty.');
       return;
     }
-
     this.groupChannelService.addChannelToGroup(this.selectedGroup, this.channelName);
-    this.channelName = ''; // Reset input field
+    this.channelName = '';
   }
 
   assignUser() {
     if (!this.isAdmin) {
-      console.error('Permission denied: Only Group Admins and Super Admins can assign users.');
+      console.error('Permission denied: Only Group Admins can assign users.');
       return;
     }
-
     if (!this.selectedGroup) {
       console.error('Please select a group.');
       return;
@@ -84,8 +80,7 @@ export class GroupsComponent {
       console.error('Username cannot be empty.');
       return;
     }
-
     this.groupChannelService.assignUserToGroup(this.selectedGroup, this.username);
-    this.username = ''; // Reset input field
+    this.username = '';
   }
 }

@@ -1,5 +1,3 @@
-<!-- client/src/app/groups/groups.component.html -->
-
 <div *ngIf="isAdmin">
   <h2>Create a new Group</h2>
   <input [(ngModel)]="groupName" placeholder="Group Name" />
@@ -20,7 +18,7 @@
   <button (click)="assignUser()">Assign User</button>
 </div>
 
-<!-- Display this if the user is not an admin -->
+
 <div *ngIf="!isAdmin">
   <p>You do not have the permissions to manage groups or channels.</p>
 </div>
