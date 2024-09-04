@@ -1,5 +1,22 @@
 <div class="dashboard-container">
-    <h2>Dashboard</h2>
-    <!-- Add your dashboard content here -->
+  <h2>Dashboard</h2>
+
+  <div>
+    <label for="group">Select Group:</label>
+    <select [(ngModel)]="selectedGroup.name" (change)="onGroupSelect(selectedGroup.name)">
+      <option *ngFor="let group of availableGroups" [value]="group.name">{{ group.name }}</option>
+    </select>
   </div>
-  
+
+  <div *ngIf="selectedGroup">
+    <label for="channel">Select Channel:</label>
+    <select [(ngModel)]="selectedChannel" (change)="onChannelSelect(selectedChannel)">
+      <option *ngFor="let channel of selectedGroup.channels" [value]="channel.name">{{ channel.name }}</option>
+    </select>
+  </div>
+
+  <div *ngIf="selectedGroup && selectedChannel">
+    <h3>You're in {{ selectedChannel }} of {{ selectedGroup.name }}</h3>
+    
+  </div>
+</div>

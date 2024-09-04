@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-navigation',
@@ -7,18 +8,19 @@ import { Router } from '@angular/router';
   styleUrls: ['./navigation.component.css']
 })
 export class NavigationComponent {
-  isLoggedIn = false; // Update this based on actual login status
+  isLoggedIn = false;
+  role: string = '';
 
-  constructor(private router: Router) {
-    // Assume some logic to determine if the user is logged in
-    // For example:
-    this.isLoggedIn = !!localStorage.getItem('authToken');
+  constructor(private authService: AuthService, private router: Router) {
+    this.isLoggedIn = this.authService.isLoggedIn();
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      this.role = currentUser.role;
+    }
   }
 
   logout() {
-    // Clear authentication token or session
-    localStorage.removeItem('authToken');
-    this.isLoggedIn = false;
+    this.authService.logout();
     this.router.navigate(['/login']);
   }
 }

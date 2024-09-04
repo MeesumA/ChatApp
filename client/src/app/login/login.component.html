@@ -1,6 +1,6 @@
 <div class="login-container">
-  <h2>Login</h2>
-  <form (ngSubmit)="login()">
+  <h2>{{ isRegistering ? 'Register' : 'Login' }}</h2>
+  <form (ngSubmit)="isRegistering ? register() : login()">
     <div class="form-group">
       <label for="username">Username</label>
       <input type="text" id="username" [(ngModel)]="username" name="username" required />
@@ -9,7 +9,22 @@
       <label for="password">Password</label>
       <input type="password" id="password" [(ngModel)]="password" name="password" required />
     </div>
-    <button type="submit">Login</button>
+
+   
+    <div *ngIf="isRegistering" class="form-group">
+      <label for="role">Role</label>
+      <select id="role" [(ngModel)]="role" name="role">
+        <option value="User">User</option>
+        <option value="Group Admin">Group Admin</option>
+      </select>
+    </div>
+
+    <button type="submit">{{ isRegistering ? 'Register' : 'Login' }}</button>
     <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
   </form>
+
+  <!-- Toggle registration/login mode -->
+  <p>
+    <a href="#" (click)="toggleRegistering()">{{ isRegistering ? 'Already have an account? Login' : 'Need an account? Register' }}</a>
+  </p>
 </div>

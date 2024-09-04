@@ -1,5 +1,30 @@
 <div class="groups-container">
-    <h2>Groups</h2>
-    <!-- Add your groups content here -->
+  <h2>Groups Management</h2>
+
+  <div>
+    <label for="groupName">Group Name:</label>
+    <input type="text" [(ngModel)]="groupName" />
+    <button (click)="createGroup()">Create Group</button>
   </div>
-  
+
+  <!-- Select Group and Add Channel -->
+  <div>
+    <label for="selectedGroup">Select Group:</label>
+    <select [(ngModel)]="selectedGroup">
+      <option *ngFor="let group of availableGroups" [value]="group.name">{{ group.name }}</option>
+    </select>
+
+    <div *ngIf="selectedGroup">
+      <label for="channelName">Channel Name:</label>
+      <input type="text" [(ngModel)]="channelName" />
+      <button (click)="addChannel()">Add Channel</button>
+    </div>
+  </div>
+
+  <!-- Assign User to Group -->
+  <div>
+    <label for="username">Assign User:</label>
+    <input type="text" [(ngModel)]="username" />
+    <button (click)="assignUser(username)">Assign to Group</button>
+  </div>
+</div>
