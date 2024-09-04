@@ -1,0 +1,11 @@
+<div class="profile-container">
+    <h2>Your Profile</h2>
+    <div *ngIf="currentUser">
+      <p><strong>Username:</strong> {{ currentUser.username }}</p>
+      <p><strong>Email:</strong> {{ currentUser.email }}</p>
+      <p><strong>Roles:</strong> {{ currentUser.roles.join(', ') }}</p>
+      <p><strong>Groups:</strong> {{ currentUser.groups.join(', ') }}</p>
+      <button (click)="deleteAccount()">Delete Account</button>
+    </div>
+  </div>
+  

@@ -1,5 +1,14 @@
-<div class="channels-container">
-    <h2>Channels</h2>
-    <!-- Add your channels content here -->
-  </div>
-  
+<h1>Available Channels</h1>
+
+<div *ngIf="userChannels.length > 0; else noChannels">
+  <ul>
+    <li *ngFor="let channel of userChannels">
+      {{ channel }}
+      <button (click)="leaveChannel(channel)">Leave Channel</button>
+    </li>
+  </ul>
+</div>
+
+<ng-template #noChannels>
+  <p>No channels available. Join a group or channel to see them here.</p>
+</ng-template>

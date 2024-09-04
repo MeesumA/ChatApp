@@ -1,11 +1,23 @@
-<div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
-<div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+<h1>Super Admin Dashboard</h1>
 
-<h3>Create New User</h3>
-<input type="text" placeholder="Username" [(ngModel)]="username" />
-<input type="password" placeholder="Password" [(ngModel)]="password" />
-<button (click)="createUser()">Create User</button>
+<h2>Promote Users</h2>
+<div>
+  <label for="username">Enter Username to Promote:</label>
+  <input type="text" [(ngModel)]="selectedUser" placeholder="Username">
+  
+  <label for="role">Select Role:</label>
+  <select [(ngModel)]="selectedRole">
+    <option value="Group Admin">Group Admin</option>
+    <option value="Super Admin">Super Admin</option>
+  </select>
+  
+  <button (click)="promoteUser()">Promote</button>
+</div>
 
-<h3>Delete User</h3>
-<input type="text" placeholder="Username to delete" [(ngModel)]="username" />
-<button (click)="deleteUser()">Delete User</button>
+<h2>Remove Users</h2>
+<div>
+  <label for="removeUsername">Enter Username to Remove:</label>
+  <input type="text" [(ngModel)]="removeUsername" placeholder="Username">
+  
+  <button (click)="removeUser()">Remove User</button>
+</div>
