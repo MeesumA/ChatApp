@@ -1,40 +1,59 @@
-/* src/app/app.component.css */
-  .navbar {
-    background-color: #333;
-    padding: 10px;
-  }
-  
-  .navbar-nav {
-    list-style: none; /* Remove default list styling */
+/* Navigation bar container */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px; /* Add padding for spacing */
+    background-color: #f8f9fa; /* Light background color */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Navigation links container */
+nav ul {
+    display: flex;
+    flex-direction: row;
     margin: 0;
     padding: 0;
-    display: flex; /* Display items horizontally */
-    align-items: center; /* Center items vertically */
-  }
-  
-  .navbar-nav li {
-    margin-right: 20px; /* Space between items */
-  }
-  
-  .navbar-nav a {
-    color: white;
+}
+
+/* Individual list items */
+nav ul li {
+    list-style-type: none;
+    margin-right: 20px; /* Increased spacing between links */
+}
+
+/* Navigation links */
+nav ul li a {
     text-decoration: none;
-    font-weight: bold;
-  }
-  
-  .navbar-nav a:hover {
-    text-decoration: underline;
-  }
-  
-  .navbar-nav button {
-    background-color: #ff4d4d;
+    color: #343a40; /* Darker text color */
+    font-weight: bold; /* Make links bold */
+    font-size: 16px; /* Increase font size */
+}
+
+/* Hover effect for links */
+nav ul li a:hover {
+    color: #007bff; /* Bootstrap primary color */
+    text-decoration: underline; /* Add underline on hover */
+}
+
+/* Logout button container */
+nav .logout-container {
+    margin-left: auto; /* Push logout button to the right */
+}
+
+/* Logout button */
+nav button {
+    padding: 8px 15px; /* Increase padding for better appearance */
+    background-color: #007bff; /* Bootstrap primary color */
     border: none;
     color: white;
-    padding: 10px 15px;
     cursor: pointer;
-  }
-  
-  .navbar-nav button:hover {
-    background-color: #e03e3e;
-  }
-  
+    border-radius: 5px; /* Rounded corners */
+    font-size: 14px; /* Adjust font size */
+    transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+/* Hover effect for logout button */
+nav button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}

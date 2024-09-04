@@ -1,10 +1,10 @@
-<nav class="navbar">
-    <ul>
-      <li><a routerLink="/login">Login</a></li> 
+<nav>
+  <ul>
       <li><a routerLink="/dashboard">Dashboard</a></li>
       <li><a routerLink="/groups">Groups</a></li>
       <li><a routerLink="/channels">Channels</a></li>
-      <!-- <li><a (click)="logout()">Logout</a></li> -->
-    </ul>
-  </nav>
-  
+      <li><a routerLink="/admin">Admin</a></li>
+      <!-- Other navigation items -->
+  </ul>
+  <button class="logout-button" (click)="logout()">Logout</button>
+</nav>
