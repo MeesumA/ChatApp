@@ -1,30 +1,26 @@
-<div class="groups-container">
-  <h2>Groups Management</h2>
+<!-- client/src/app/groups/groups.component.html -->
 
-  <div>
-    <label for="groupName">Group Name:</label>
-    <input type="text" [(ngModel)]="groupName" />
-    <button (click)="createGroup()">Create Group</button>
-  </div>
+<div *ngIf="isAdmin">
+  <h2>Create a new Group</h2>
+  <input [(ngModel)]="groupName" placeholder="Group Name" />
+  <button (click)="createGroup()">Create Group</button>
 
-  <!-- Select Group and Add Channel -->
-  <div>
-    <label for="selectedGroup">Select Group:</label>
-    <select [(ngModel)]="selectedGroup">
-      <option *ngFor="let group of availableGroups" [value]="group.name">{{ group.name }}</option>
-    </select>
+  <h2>Add Channel to Group</h2>
+  <select [(ngModel)]="selectedGroup">
+    <option *ngFor="let group of availableGroups" [value]="group.name">{{ group.name }}</option>
+  </select>
+  <input [(ngModel)]="channelName" placeholder="Channel Name" />
+  <button (click)="addChannel()">Add Channel</button>
 
-    <div *ngIf="selectedGroup">
-      <label for="channelName">Channel Name:</label>
-      <input type="text" [(ngModel)]="channelName" />
-      <button (click)="addChannel()">Add Channel</button>
-    </div>
-  </div>
+  <h2>Assign User to Group</h2>
+  <select [(ngModel)]="selectedGroup">
+    <option *ngFor="let group of availableGroups" [value]="group.name">{{ group.name }}</option>
+  </select>
+  <input [(ngModel)]="username" placeholder="Username" />
+  <button (click)="assignUser()">Assign User</button>
+</div>
 
-  <!-- Assign User to Group -->
-  <div>
-    <label for="username">Assign User:</label>
-    <input type="text" [(ngModel)]="username" />
-    <button (click)="assignUser(username)">Assign to Group</button>
-  </div>
+<!-- Display this if the user is not an admin -->
+<div *ngIf="!isAdmin">
+  <p>You do not have the permissions to manage groups or channels.</p>
 </div>

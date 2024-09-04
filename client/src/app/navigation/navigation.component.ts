@@ -11,13 +11,16 @@ export class NavigationComponent {
   isLoggedIn = false;
   role: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {
-    this.isLoggedIn = this.authService.isLoggedIn();
-    const currentUser = this.authService.getCurrentUser();
-    if (currentUser) {
-      this.role = currentUser.role;
-    }
+// client/src/app/navigation/navigation.component.ts
+
+constructor(private authService: AuthService, private router: Router) {
+  this.isLoggedIn = this.authService.isLoggedIn();
+  const currentUser = this.authService.getCurrentUser();
+  if (currentUser && currentUser.roles.length > 0) {
+    this.role = currentUser.roles[0];  // Assuming the first role is the primary role
   }
+}
+
 
   logout() {
     this.authService.logout();
