@@ -1,35 +1,35 @@
 const express = require('express');
-const User = require('../models/User');
 const Group = require('../models/Group');
 const Channel = require('../models/Channel');
+const User = require('../models/User');
 const Message = require('../models/Message');
 const upload = require('../middleware/upload');
 
 const router = express.Router();
 
-router.post('/upload-image', (req, res) => {
-    upload(req, res, (err) => {
-      if (err) {
-        return res.status(400).json({ error: err });
-      } else {
-        if (req.file == undefined) {
-          return res.status(400).json({ error: 'No file selected!' });
-        }
-        res.json({ imagePath: `/uploads/${req.file.filename}` });
-      }
-    });
-  });
-
-// Fetch groups for a user
-router.get('/groups/:userId', async (req, res) => {
-  const user = await User.findById(req.params.userId).populate('groups');
-  res.json(user.groups);
+// Create a group
+router.post('/groups', async (req, res) => {
+  const { name, adminUsername } = req.body;
+  const newGroup = new Group({ name, adminUsername });
+  await newGroup.save();
+  res.json(newGroup);
 });
 
-// Fetch channels for a group
-router.get('/groups/:groupId/channels', async (req, res) => {
-  const group = await Group.findById(req.params.groupId).populate('channels');
-  res.json(group.channels);
+// Join a group
+router.post('/groups/:groupId/join', async (req, res) => {
+  const group = await Group.findById(req.params.groupId);
+  const user = await User.findById(req.body.userId);
+  group.users.push(user._id);
+  await group.save();
+  res.json(group);
+});
+
+// Create a channel in a group
+router.post('/groups/:groupId/channels', async (req, res) => {
+  const { name } = req.body;
+  const newChannel = new Channel({ name, group: req.params.groupId });
+  await newChannel.save();
+  res.json(newChannel);
 });
 
 // Fetch messages for a channel
@@ -38,17 +38,11 @@ router.get('/channels/:channelId/messages', async (req, res) => {
   res.json(messages);
 });
 
-// Send a message to a channel
-router.post('/channels/:channelId/messages', async (req, res) => {
-  const { senderId, content, imageUrl } = req.body;
-  const newMessage = new Message({
-    sender: senderId,
-    channel: req.params.channelId,
-    content,
-    imageUrl
-  });
-  await newMessage.save();
-  res.json(newMessage);
+// Upload image (Avatar or Chat Image)
+router.post('/upload-image', upload.single('image'), (req, res) => {
+  if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
+  const imageUrl = `/uploads/${req.file.filename}`;
+  res.json({ imageUrl });
 });
 
 module.exports = router;

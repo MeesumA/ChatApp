@@ -1,0 +1,13 @@
+<div class="chat-window">
+    <div *ngFor="let msg of messages">
+      <p>{{ msg.sender }}: {{ msg.content }}</p>
+      <img *ngIf="msg.imageUrl" [src]="msg.imageUrl" alt="Image" width="100" />
+    </div>
+  </div>
+  
+  <input [(ngModel)]="message" placeholder="Type your message" />
+  <button (click)="sendMessage()">Send</button>
+  
+  <input type="file" (change)="handleFileInput($event)" />
+  <button (click)="uploadImage()">Upload Image</button>
+  

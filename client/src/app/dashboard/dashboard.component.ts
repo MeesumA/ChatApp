@@ -19,7 +19,9 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     if (this.currentUser) {
-      this.userGroups = this.currentUser.groups; 
+      this.userGroups = this.currentUser.groups || []; // Fallback to an empty array
+      // this.userChannels = this.currentUser.channels || []; // Make sure channels is also assigned
     }
   }
-}
+  
+  }

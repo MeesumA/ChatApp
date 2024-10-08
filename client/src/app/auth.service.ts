@@ -97,7 +97,10 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return localStorage.getItem(this.currentUserKey) !== null;
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return !!localStorage.getItem('token');
+    }
+    return false;
   }
 
   promoteToGroupAdmin(username: string): boolean {

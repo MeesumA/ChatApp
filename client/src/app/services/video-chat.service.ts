@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import Peer from 'peerjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class VideoChatService {
   peer: Peer;
@@ -11,16 +11,18 @@ export class VideoChatService {
     this.peer = new Peer();
   }
 
-  createCall(peerId: string, stream: MediaStream) {
+  callUser(peerId: string, stream: MediaStream) {
     const call = this.peer.call(peerId, stream);
-    return call;
+    call.on('stream', (_remoteStream) => {
+      // Display remote video stream
+    });
   }
 
   answerCall(stream: MediaStream) {
     this.peer.on('call', (call) => {
-      call.answer(stream); // Answer the call with our media stream
+      call.answer(stream);
       call.on('stream', (remoteStream) => {
-        // Display remoteStream
+        // Display remote video stream
       });
     });
   }
