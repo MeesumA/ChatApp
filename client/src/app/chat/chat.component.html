@@ -1,8 +1,19 @@
+<!-- chat.component.html -->
 <div class="chat-container">
+    <h3>Logged in as {{ currentUser.username }}</h3>
+  
+    <!-- Select recipient -->
+    <label for="recipient">Select User to Chat With:</label>
+    <select [(ngModel)]="selectedRecipient">
+      <option *ngFor="let user of users" [value]="user.username">{{ user.username }}</option>
+    </select>
+  
+    <!-- Chat window -->
     <div *ngFor="let msg of messages" class="message">
-      <strong>{{ msg.user }}:</strong> {{ msg.message }}
+      <strong>{{ msg.sender }}:</strong> {{ msg.messageContent }}
     </div>
   
+    <!-- Message input -->
     <input [(ngModel)]="message" placeholder="Type your message" />
     <button (click)="sendMessage()">Send</button>
   </div>
