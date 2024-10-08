@@ -1,10 +1,10 @@
-<nav class="navbar">
-    <ul class="navbar-nav">
-      <li *ngIf="authService.isLoggedIn()"><a routerLink="/dashboard">Dashboard</a></li>
-      <li *ngIf="authService.isLoggedIn()"><a routerLink="/groups">Groups</a></li>
-      <li *ngIf="authService.isLoggedIn()"><a routerLink="/channels">Channels</a></li>
-      <li *ngIf="authService.isLoggedIn()"><button (click)="logout()">Logout</button></li>
-    </ul>
-  </nav>
-  <router-outlet></router-outlet>
-  
+<nav>
+  <ul>
+    <li *ngIf="authService.isLoggedIn()" routerLinkActive="active"><a routerLink="/chat">Chat</a></li>
+    <li *ngIf="authService.isLoggedIn()" routerLinkActive="active"><a routerLink="/groups">Groups</a></li>
+    <li *ngIf="authService.isLoggedIn()" routerLinkActive="active"><a routerLink="/channels">Channels</a></li>
+    <li *ngIf="authService.isLoggedIn()" (click)="logout()">Logout</li>
+  </ul>
+</nav>
+
+<router-outlet></router-outlet> <!-- Where routed components will render -->

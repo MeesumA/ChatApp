@@ -1,20 +1,30 @@
-<!-- chat.component.html -->
 <div class="chat-container">
-    <h3>Logged in as {{ currentUser.username }}</h3>
+    <h3>Logged in as {{ currentUser?.username }}</h3>
   
-    <!-- Select recipient -->
-    <label for="recipient">Select User to Chat With:</label>
-    <select [(ngModel)]="selectedRecipient">
-      <option *ngFor="let user of users" [value]="user.username">{{ user.username }}</option>
-    </select>
+    <!-- Search for Users -->
+    <label for="searchUser">Search for users to chat with:</label>
+    <input [(ngModel)]="searchQuery" placeholder="Search users" id="searchUser" />
   
-    <!-- Chat window -->
-    <div *ngFor="let msg of messages" class="message">
-      <strong>{{ msg.sender }}:</strong> {{ msg.messageContent }}
+    <!-- List of search results -->
+    <div *ngFor="let user of filteredUsers()" class="user-result">
+      <strong>{{ user.username }}</strong>
+      <button (click)="startChat(user.username)">Chat</button>
     </div>
   
-    <!-- Message input -->
-    <input [(ngModel)]="message" placeholder="Type your message" />
-    <button (click)="sendMessage()">Send</button>
+    <!-- Chat Window -->
+    <div *ngIf="selectedRecipient" class="chat-window">
+      <h4>Chat with {{ selectedRecipient }}</h4>
+      <div class="chat-messages">
+        <div *ngFor="let msg of messages" class="message">
+          <strong>{{ msg.sender }}:</strong> {{ msg.messageContent }}
+        </div>
+      </div>
+  
+      <!-- Message Input -->
+      <div class="message-input">
+        <input [(ngModel)]="message" placeholder="Type your message" />
+        <button (click)="sendMessage()">Send</button>
+      </div>
+    </div>
   </div>
   

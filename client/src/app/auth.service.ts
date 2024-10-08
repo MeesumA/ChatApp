@@ -8,10 +8,11 @@ import { v4 as uuidv4 } from 'uuid';
 export class AuthService {
   private usersKey = 'users'; // Local storage key for users
   private currentUserKey = 'currentUser'; // Local storage key for current logged-in user
+  private tokenKey = 'token';  // Local storage key for token
 
   constructor() {
     if (this.isBrowser()) {
-      this.ensureSuperUser(); // Ensure that there's a Super Admin in the system
+      this.ensureSuperUser(); // Ensure there's a Super Admin
     }
   }
 
@@ -19,17 +20,20 @@ export class AuthService {
     return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
   }
 
+  // Authenticate user and generate a token
   authenticate(username: string, password: string): boolean {
     if (!this.isBrowser()) return false;
     const users: User[] = this.getUsers();
     const user = users.find((u) => u.username === username && u.password === password);
     if (user) {
       localStorage.setItem(this.currentUserKey, JSON.stringify(user));
+      localStorage.setItem(this.tokenKey, 'mockToken123');  // Store mock token
       return true;
     }
     return false;
   }
 
+  // Register a new user
   register(username: string, password: string, role: string = 'User'): boolean {
     if (!this.isBrowser()) return false;
     let users: User[] = this.getUsers();
@@ -54,6 +58,7 @@ export class AuthService {
     return true;
   }
 
+  // Get all users from localStorage
   getUsers(): User[] {
     if (!this.isBrowser()) return [];
     const usersJson = localStorage.getItem(this.usersKey);
@@ -65,6 +70,7 @@ export class AuthService {
     localStorage.setItem(this.usersKey, JSON.stringify(users));
   }
 
+  // Ensure at least one Super Admin exists
   ensureSuperUser(): void {
     if (!this.isBrowser()) return;
     const users = this.getUsers();
@@ -81,28 +87,31 @@ export class AuthService {
     }
   }
 
+  // Get the currently logged-in user
   getCurrentUser(): User | null {
     if (!this.isBrowser()) return null;
     const currentUserJson = localStorage.getItem(this.currentUserKey);
     return currentUserJson ? JSON.parse(currentUserJson) : null;
   }
 
+  // Update the current user details
   updateCurrentUser(user: User): void {
     localStorage.setItem(this.currentUserKey, JSON.stringify(user));
   }
 
+  // Check if the user is logged in by checking the token
+  isLoggedIn(): boolean {
+    return this.isBrowser() ? !!localStorage.getItem(this.tokenKey) : false;
+  }
+
+  // Logout the current user
   logout(): void {
     if (!this.isBrowser()) return;
     localStorage.removeItem(this.currentUserKey);
+    localStorage.removeItem(this.tokenKey);  // Clear the token on logout
   }
 
-  isLoggedIn(): boolean {
-    if (this.isBrowser()) {
-      return !!localStorage.getItem('token');  // Check token in browser
-    }
-    return false;  // Default to false if not in browser (for SSR)
-  }
-
+  // Promote a user to Group Admin
   promoteToGroupAdmin(username: string): boolean {
     if (!this.isBrowser()) return false;
     const users = this.getUsers();
@@ -115,6 +124,7 @@ export class AuthService {
     return false;
   }
 
+  // Promote a user to Super Admin
   promoteToSuperAdmin(username: string): boolean {
     if (!this.isBrowser()) return false;
     const users = this.getUsers();
@@ -127,6 +137,7 @@ export class AuthService {
     return false;
   }
 
+  // Remove a user by username
   removeUser(username: string): boolean {
     if (!this.isBrowser()) return false;
     let users = this.getUsers();
@@ -139,6 +150,7 @@ export class AuthService {
     return false;
   }
 
+  // Delete the current user's account
   deleteAccount(): void {
     const currentUser = this.getCurrentUser();
     if (currentUser) {

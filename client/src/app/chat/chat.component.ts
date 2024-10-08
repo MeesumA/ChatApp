@@ -1,7 +1,6 @@
-// chat.component.ts
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';  // Import CommonModule
+import { CommonModule } from '@angular/common';
 import { ChatService } from '../chat.service';
 import { AuthService } from '../auth.service';
 
@@ -9,49 +8,63 @@ import { AuthService } from '../auth.service';
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   standalone: true,
-  imports: [FormsModule, CommonModule],  // Add CommonModule here for *ngFor support
+  imports: [FormsModule, CommonModule],
 })
 export class ChatComponent implements OnInit {
-  message: string = '';
-  messages: { sender: string, messageContent: string }[] = [];
   currentUser: any;
-  selectedRecipient: string = '';  // Stores the selected recipient (username)
-  users: { username: string }[] = [];  // List of users to choose from (with `username` property)
+  users: { username: string }[] = [];  // All available users
+  searchQuery: string = '';  // Search query for filtering users
+  selectedRecipient: string = '';  // Username of the selected recipient
+  message: string = '';  // Message content
+  messages: { sender: string, messageContent: string }[] = [];  // Chat messages
 
-  constructor(
-    private chatService: ChatService,
-    private authService: AuthService
-  ) {}
+  constructor(private chatService: ChatService, private authService: AuthService) {}
 
   ngOnInit(): void {
+    // Get the current user from the AuthService
     this.currentUser = this.authService.getCurrentUser();
-    
-    // Load all users except the current user
-    this.chatService.getUsers().subscribe((users: { username: string }[]) => {
-      this.users = users.filter(u => u.username !== this.currentUser.username);
+
+    // Fetch all users except the current one
+    this.chatService.getUsers(this.currentUser.username).subscribe((users) => {
+      this.users = users;
     });
 
     // Listen for incoming messages
-    this.chatService.receiveMessage().subscribe((data: { sender: string, messageContent: string }) => {
-      this.messages.push({ sender: data.sender, messageContent: data.messageContent });
+    this.chatService.receiveMessage().subscribe((data) => {
+      if (data.sender === this.selectedRecipient) {
+        this.messages.push(data);  // Show only messages from the selected recipient
+      }
     });
 
     // Inform the server about user login
     this.chatService.login(this.currentUser.username);
   }
 
+  // Filter users based on the search query
+  filteredUsers() {
+    return this.users.filter((user) =>
+      user.username.toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
+  }
+
+  // Start chatting with the selected user
+  startChat(recipient: string) {
+    this.selectedRecipient = recipient;
+    this.messages = [];  // Clear previous messages
+  }
+
+  // Send message to the selected recipient
   sendMessage() {
     if (this.message.trim() && this.selectedRecipient) {
-      // Send the message to the selected recipient
       this.chatService.sendMessage({
         sender: this.currentUser.username,
         recipient: this.selectedRecipient,
-        messageContent: this.message
+        messageContent: this.message,
       });
 
-      // Display the message in the sender's chat window
+      // Show the message in the sender's chat window
       this.messages.push({ sender: 'You', messageContent: this.message });
-      this.message = '';  // Clear input field
+      this.message = '';  // Clear the input
     }
   }
 }

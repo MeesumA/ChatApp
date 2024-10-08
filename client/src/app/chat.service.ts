@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { io } from 'socket.io-client';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -8,42 +9,32 @@ import { Observable } from 'rxjs';
 export class ChatService {
   private socket: any;
 
-  constructor() {
-    this.socket = io('http://localhost:3000');  // Your server URL
+  constructor(private http: HttpClient) {
+    // Connect to the backend server running at localhost:3000
+    this.socket = io('http://localhost:3000');
   }
 
-  // Inform the server about user login
-  login(username: string) {
-    this.socket.emit('userLogin', username);
+  // Fetch users from the backend (excluding the current user)
+  getUsers(currentUsername: string): Observable<any[]> {
+    return this.http.get<any[]>(`http://localhost:3000/users?username=${currentUsername}`);
   }
 
-  // Send message to server
-  sendMessage(messageData: { sender: string, recipient: string, messageContent: string }) {
-    this.socket.emit('sendMessage', messageData);
+  // Send a message to the server
+  sendMessage(message: { sender: string, recipient: string, messageContent: string }) {
+    this.socket.emit('sendMessage', message);
   }
 
-// chat.service.ts
-
-receiveMessage(): Observable<{ sender: string; messageContent: string }> {
+  // Receive messages from the server
+  receiveMessage(): Observable<{ sender: string, messageContent: string }> {
     return new Observable(observer => {
-      this.socket.on('receiveMessage', (data: { sender: string; messageContent: string }) => {
+      this.socket.on('receiveMessage', (data: { sender: string, messageContent: string }) => {
         observer.next(data);
       });
     });
   }
-  
 
-// chat.service.ts
-
-getUsers(): Observable<any[]> {
-    return new Observable(observer => {
-      // Simulate fetching users with objects containing `username`
-      const users = [
-        { username: 'John' },
-        { username: 'Marry' },
-        { username: 'Alice' }
-      ];
-      observer.next(users);
-    });
+  // Inform the server about user login
+  login(username: string) {
+    this.socket.emit('login', username);
   }
 }
