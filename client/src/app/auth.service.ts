@@ -97,7 +97,10 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return localStorage.getItem(this.currentUserKey) !== null;
+    if (this.isBrowser()) {
+      return !!localStorage.getItem('token');  // Check token in browser
+    }
+    return false;  // Default to false if not in browser (for SSR)
   }
 
   promoteToGroupAdmin(username: string): boolean {
