@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { GroupChannelService } from '../group-channel.service';
 import { AuthService } from '../auth.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-channels',
   templateUrl: './channels.component.html',
-  styleUrls: ['./channels.component.css']
+  styleUrls: ['./channels.component.css'],
+  standalone: true,
+  imports: [CommonModule, FormsModule]
 })
 export class ChannelsComponent implements OnInit {
   userChannels: string[] = [];

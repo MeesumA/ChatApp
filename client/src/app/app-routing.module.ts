@@ -8,9 +8,9 @@ import { AuthGuard } from './auth.guard';  // Ensure AuthGuard is implemented co
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'chat', component: ChatComponent, canActivate: [AuthGuard] }, // Protected route
-  { path: 'groups', component: GroupsComponent, canActivate: [AuthGuard] }, // Protected route
-  { path: 'channels', component: ChannelsComponent, canActivate: [AuthGuard] }, // Protected route
+  { path: 'chat', component: ChatComponent, canActivate: [AuthGuard] },  // Protected route
+  { path: 'groups', component: GroupsComponent, canActivate: [AuthGuard] },  // Protected route
+  { path: 'channels', component: ChannelsComponent, canActivate: [AuthGuard] },  // Protected route
   { path: '', redirectTo: '/chat', pathMatch: 'full' },  // Redirect to chat after login
   { path: '**', redirectTo: '/login' }  // Fallback route for invalid URLs
 ];

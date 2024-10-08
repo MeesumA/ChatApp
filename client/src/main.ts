@@ -1,11 +1,12 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
 import { RouterModule, Routes } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';  // Import HttpClientModule
 import { LoginComponent } from './app/login/login.component';
 import { ChatComponent } from './app/chat/chat.component';
 import { GroupsComponent } from './app/groups/groups.component';
 import { ChannelsComponent } from './app/channels/channels.component';
-import { AuthGuard } from './app/auth.guard';  // Make sure the guard is used
+import { AuthGuard } from './app/auth.guard';  // Ensure AuthGuard is implemented correctly
 import { importProvidersFrom } from '@angular/core';
 
 const routes: Routes = [
@@ -20,5 +21,6 @@ const routes: Routes = [
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(RouterModule.forRoot(routes)),
+    importProvidersFrom(HttpClientModule)  // Include HttpClientModule here
   ]
 });
