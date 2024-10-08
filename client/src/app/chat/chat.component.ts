@@ -12,8 +12,7 @@ import { AuthService } from '../auth.service';
 })
 export class ChatComponent implements OnInit {
   currentUser: any;
-  users: { username: string }[] = [];  // All available users
-  searchQuery: string = '';  // Search query for filtering users
+  users: { username: string }[] = [];  // All available users except the current one
   selectedRecipient: string = '';  // Username of the selected recipient
   message: string = '';  // Message content
   messages: { sender: string, messageContent: string }[] = [];  // Chat messages
@@ -38,13 +37,6 @@ export class ChatComponent implements OnInit {
 
     // Inform the server about user login
     this.chatService.login(this.currentUser.username);
-  }
-
-  // Filter users based on the search query
-  filteredUsers() {
-    return this.users.filter((user) =>
-      user.username.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
   }
 
   // Start chatting with the selected user

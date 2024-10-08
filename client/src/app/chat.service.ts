@@ -10,8 +10,7 @@ export class ChatService {
   private socket: any;
 
   constructor(private http: HttpClient) {
-    // Connect to the backend server running at localhost:3000
-    this.socket = io('http://localhost:3000');
+    this.socket = io('http://localhost:3000');  // Connect to the backend server
   }
 
   // Fetch users from the backend (excluding the current user)
@@ -19,7 +18,7 @@ export class ChatService {
     return this.http.get<any[]>(`http://localhost:3000/users?username=${currentUsername}`);
   }
 
-  // Send a message to the server
+  // Send message to the server
   sendMessage(message: { sender: string, recipient: string, messageContent: string }) {
     this.socket.emit('sendMessage', message);
   }

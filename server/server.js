@@ -4,8 +4,6 @@ const socketIo = require('socket.io');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
 
 // Create Express app
 const app = express();
@@ -35,9 +33,6 @@ const userSchema = new mongoose.Schema({
   groups: [String],
 });
 const User = mongoose.model('User', userSchema);
-
-// Path to local JSON for groups (stored in filesystem)
-const groupsFile = path.join(__dirname, 'data', 'groups.json');
 
 // 1️⃣ **User Registration**
 app.post('/register', async (req, res) => {
@@ -81,71 +76,20 @@ app.post('/login', async (req, res) => {
 
 // 3️⃣ **Get Users (excluding current user)**
 app.get('/users', async (req, res) => {
-  const { username } = req.query;
+  const { username } = req.query; // The current user's username
 
   try {
-    // Find all users except the current user
-    const users = await User.find({ username: { $ne: username } });
-    res.json(users);
+    // Fetch all users from MongoDB except the current logged-in user
+    const users = await User.find({ username: { $ne: username } });  // $ne means "not equal to"
+    
+    // Only return usernames (you could exclude other fields here as well)
+    const filteredUsers = users.map(user => ({ username: user.username }));
+    
+    res.json(filteredUsers);  // Return the filtered list of users
   } catch (error) {
     console.error('Error fetching users:', error);
     res.status(500).send('Internal server error');
   }
-});
-
-// 4️⃣ **Group Management (stored in local JSON)**
-
-// Add Group (stored in local filesystem)
-app.post('/groups', (req, res) => {
-  const { groupName } = req.body;
-  let groups = JSON.parse(fs.readFileSync(groupsFile, 'utf8'));
-
-  // Check if group already exists
-  if (groups.find(group => group.groupName === groupName)) {
-    return res.status(400).send('Group already exists');
-  }
-
-  // Add the new group
-  groups.push({ groupName });
-  fs.writeFileSync(groupsFile, JSON.stringify(groups, null, 2));
-
-  res.status(201).send('Group created successfully');
-});
-
-// Fetch all groups (from local JSON)
-app.get('/groups', (req, res) => {
-  let groups = JSON.parse(fs.readFileSync(groupsFile, 'utf8'));
-  res.json(groups);
-});
-
-// 5️⃣ **Socket.io for real-time messaging**
-
-io.on('connection', (socket) => {
-  console.log('User connected:', socket.id);
-
-  // Store the username when a user logs in
-  socket.on('login', (username) => {
-    socket.username = username;
-    console.log(`${username} logged in`);
-  });
-
-  // Handle sending and receiving messages
-  socket.on('sendMessage', (message) => {
-    const { sender, recipient, messageContent } = message;
-
-    // Emit the message to the recipient
-    const recipientSocket = Array.from(io.sockets.sockets.values()).find(
-      (s) => s.username === recipient
-    );
-    if (recipientSocket) {
-      recipientSocket.emit('receiveMessage', { sender, messageContent });
-    }
-  });
-
-  // Handle user disconnect
-  socket.on('disconnect', () => {
-    console.log(`${socket.username} disconnected`);
-  });
 });
 
 // Start the server

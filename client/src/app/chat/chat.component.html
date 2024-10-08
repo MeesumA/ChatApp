@@ -1,12 +1,8 @@
 <div class="chat-container">
     <h3>Logged in as {{ currentUser?.username }}</h3>
   
-    <!-- Search for Users -->
-    <label for="searchUser">Search for users to chat with:</label>
-    <input [(ngModel)]="searchQuery" placeholder="Search users" id="searchUser" />
-  
-    <!-- List of search results -->
-    <div *ngFor="let user of filteredUsers()" class="user-result">
+    <!-- List of users -->
+    <div *ngFor="let user of users" class="user-result">
       <strong>{{ user.username }}</strong>
       <button (click)="startChat(user.username)">Chat</button>
     </div>
@@ -14,7 +10,9 @@
     <!-- Chat Window -->
     <div *ngIf="selectedRecipient" class="chat-window">
       <h4>Chat with {{ selectedRecipient }}</h4>
+     
       <div class="chat-messages">
+        <!-- Display the chat messages between the logged-in user and the selected recipient -->
         <div *ngFor="let msg of messages" class="message">
           <strong>{{ msg.sender }}:</strong> {{ msg.messageContent }}
         </div>
