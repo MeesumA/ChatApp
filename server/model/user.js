@@ -1,9 +1,9 @@
-// server/model/user.js
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, unique: true, required: true },
   password: { type: String, required: true },
+  email: { type: String, required: true }, // Add the email field
 });
 
 module.exports = mongoose.model('User', UserSchema);

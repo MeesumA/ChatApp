@@ -10,86 +10,97 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: 'http://localhost:4200',  // Allowing Angular client
+    origin: 'http://localhost:4200',  // Adjust this if needed
     methods: ['GET', 'POST'],
   },
 });
 
-app.use(cors());  // Enable CORS for frontend
-app.use(bodyParser.json());  // Enable JSON body parsing
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
 
-// Connect to MongoDB
+// MongoDB Connection (without deprecated options)
 const mongoUri = 'mongodb+srv://syedkazmi3:7SWW7r9XW0TTHKBG@chatapp.amvy7.mongodb.net/ChatData?retryWrites=true&w=majority';
 mongoose.connect(mongoUri)
-  .then(() => console.log('MongoDB connected'))
+  .then(() => console.log('MongoDB connected successfully'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// Define Mongoose schema and model for Users
+// Mongoose User schema
 const userSchema = new mongoose.Schema({
-  username: String,
-  password: String,
-  email: String,
-  roles: [String],
-  groups: [String],
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  email: { type: String, required: true },
 });
+
 const User = mongoose.model('User', userSchema);
 
-// 1️⃣ **User Registration**
+// Routes for Registration and Login
 app.post('/register', async (req, res) => {
   const { username, password, email } = req.body;
-
   try {
-    // Check if the user already exists
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-      return res.status(400).send('Username already exists');
-    }
-
-    // Create new user
     const newUser = new User({ username, password, email });
     await newUser.save();
-
     res.status(201).send('User registered successfully');
   } catch (error) {
-    console.error('Error registering user:', error);
-    res.status(500).send('Internal server error');
+    console.error('Registration error:', error);
+    res.status(500).send('Error registering user');
   }
 });
 
-// 2️⃣ **User Login**
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
-
   try {
-    // Find the user in the MongoDB collection
     const user = await User.findOne({ username, password });
-    if (!user) {
-      return res.status(400).send('Invalid credentials');
-    }
-
-    res.status(200).send('Login successful');
+    if (!user) return res.status(400).send('Invalid credentials');
+    res.status(200).json({ username: user.username });
   } catch (error) {
-    console.error('Error logging in:', error);
-    res.status(500).send('Internal server error');
+    console.error('Login error:', error);
+    res.status(500).send('Error logging in');
   }
 });
 
-// 3️⃣ **Get Users (excluding current user)**
+// 1️⃣ **Get Users Route (Excluding Current User)**
 app.get('/users', async (req, res) => {
-  const { username } = req.query; // The current user's username
-
+  const { username } = req.query; // Current logged-in user's username
+  
   try {
-    // Fetch all users from MongoDB except the current logged-in user
-    const users = await User.find({ username: { $ne: username } });  // $ne means "not equal to"
-    
-    // Only return usernames (you could exclude other fields here as well)
+    // Find all users except the current one
+    const users = await User.find({ username: { $ne: username } });
+    if (!users || users.length === 0) {
+      return res.status(404).send('No users found');
+    }
+
+    // Return just the usernames of other users
     const filteredUsers = users.map(user => ({ username: user.username }));
-    
-    res.json(filteredUsers);  // Return the filtered list of users
+    res.status(200).json(filteredUsers);
   } catch (error) {
     console.error('Error fetching users:', error);
-    res.status(500).send('Internal server error');
+    res.status(500).send('Error fetching users');
   }
+});
+
+// WebSocket connections
+io.on('connection', (socket) => {
+  console.log(`User connected: ${socket.id}`);
+
+  socket.on('login', (username) => {
+    socket.username = username;
+    console.log(`${username} logged in`);
+  });
+
+  socket.on('sendMessage', (message) => {
+    const { sender, recipient, messageContent } = message;
+    const recipientSocket = Array.from(io.sockets.sockets.values()).find(s => s.username === recipient);
+    if (recipientSocket) {
+      recipientSocket.emit('receiveMessage', { sender, messageContent });
+    } else {
+      console.log(`Recipient ${recipient} not found or not online`);
+    }
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`${socket.username} disconnected`);
+  });
 });
 
 // Start the server
