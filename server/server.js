@@ -27,10 +27,17 @@ const io = socketIo(server, {
 app.use(cors());  // Enable CORS for frontend
 app.use(bodyParser.json());  // Enable JSON body parsing
 
+<<<<<<< Updated upstream
 // Connect to MongoDB
 const mongoUri = 'mongodb+srv://syedkazmi3:7SWW7r9XW0TTHKBG@chatapp.amvy7.mongodb.net/ChatData?retryWrites=true&w=majority';
 mongoose.connect(mongoUri)
   .then(() => console.log('MongoDB connected'))
+=======
+// MongoDB Connection (without deprecated options)
+const mongoUri = 'mongodb://localhost:27017/chatapp'; // Use localhost for local MongoDB
+mongoose.connect(mongoUri)
+  .then(() => console.log('MongoDB connected successfully to localhost'))
+>>>>>>> Stashed changes
   .catch(err => console.error('MongoDB connection error:', err));
 
 // Define Mongoose schema and model for Users
@@ -83,9 +90,24 @@ app.post('/login', async (req, res) => {
   }
 });
 
+<<<<<<< Updated upstream
 // 3️⃣ **Get Users (excluding current user)**
 app.get('/users', async (req, res) => {
   const { username } = req.query; // The current user's username
+=======
+// Get Users Route (Excluding Current User)
+app.get('/users', async (req, res) => {
+  const { username } = req.query; // Current logged-in user's username
+  console.log('Fetching users, excluding:', username);  // Log for debugging
+
+  try {
+    // Find all users except the current one
+    const users = await User.find({ username: { $ne: username } });
+    if (!users || users.length === 0) {
+      console.log('No other users found');
+      return res.status(200).json([]);  // Return an empty array instead of 404
+    }
+>>>>>>> Stashed changes
 
   try {
     // Fetch all users from MongoDB except the current logged-in user
@@ -103,6 +125,6 @@ app.get('/users', async (req, res) => {
 
 // Start the server
 server.listen(3000, () => {
-  console.log('Server running on port 3000');
+  console.log('Server running on http://localhost:3000');
 });
 >>>>>>> Stashed changes
